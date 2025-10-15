@@ -1,28 +1,16 @@
 # Script to disable AD users from a CSV file and generate an HTML report of the results.
 
 # Set paths for input and output
-$csvPath = "C:\path\to\your\file.csv"
-$htmlOutputPath = "C:\path\to\output.html"
+$csvPath = ""
+$htmlOutputPath = ""
 $users = Import-Csv -Path $csvPath -ErrorAction Stop
 
 # Initialise generic list to store log entries.
 $logList = [System.Collections.Generic.List[PSObject]]::new()
 
 foreach ($row in $users) {
-    $username = ($row.SAMAccountName).Trim()
-
-    # Check for empty entries in .csv file.
-    if ([string]::IsNullOrWhiteSpace($username)) {
-        $logList.Add([PSCustomObject]@{
-            Name     = ''
-            Username = ''
-            Action   = 'Skipped'
-            Result   = 'Empty username entry.'
-            Status   = 'Warning'
-        })
-        continue
-    }
-
+    $username = ($row.SAMAccountName)
+    
     # Get AD User, check if it's enabled, disable it if so, log the results the list.
     try {
         $adUser = Get-ADUser -Identity $username -ErrorAction Stop
@@ -100,3 +88,4 @@ $htmlContent = $htmlHead + ($htmlRows -join "`n") + $htmlFoot
 Set-Content -Path $htmlOutputPath -Value $htmlContent -Encoding UTF8
 
 Write-Host "HTML report saved to $htmlOutputPath"
+
