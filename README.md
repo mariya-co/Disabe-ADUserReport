@@ -7,3 +7,5 @@ SAMAccountnames
 
 Note: input and output is generic, edit it to suit your environment before using.
 
+There's also a version which exports to a CSV instead, if that's preferred.
+
